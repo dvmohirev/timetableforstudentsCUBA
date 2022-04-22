@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        xmlns:c="http://schemas.haulmont.com/cuba/screen/jpql_condition.xsd"
+        caption="msg://lessonBrowse.caption"
+        focusComponent="lessonsTable"
+        messagesPack="com.company.timetableforstudents.web.screens.lesson">
+    <data readOnly="true">
+        <collection id="lessonsDc"
+                    class="com.company.timetableforstudents.entity.Lesson">
+            <view extends="_local">
+                <property name="teacher" view="_minimal">
+                    <property name="lastName"/>
+                </property>
+            </view>
+            <loader id="lessonsDl">
+                <query>
+                    <![CDATA[select e from timetableforstudents_Lesson e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <dialogMode height="600"
+                width="800"/>
+    <facets>
+        <editorScreen id="lessonEditDialog" container="lessonsDc"
+                      entityClass="com.company.timetableforstudents.entity.Lesson"
+                      screenClass="com.company.timetableforstudents.web.screens.lesson.LessonEdit" openMode="DIALOG"
+                      editMode="EDIT"/>
+    </facets>
+    <layout expand="lessonsTabSheet"
+            spacing="true">
+        <filter id="filter"
+                applyTo="lessonsTable"
+                dataLoader="lessonsDl">
+            <properties include=".*"/>
+        </filter>
+        <tabSheet id="lessonsTabSheet">
+            <tab id="calendarTab" caption="msg://calendarTab.caption" margin="true,false,false,false" spacing="true"
+                 expand="lessonsCalendar">
+                <calendar id="lessonsCalendar" dataContainer="lessonsDc" startDateProperty="startDate"
+                          endDateProperty="endDate" captionProperty="name" descriptionProperty="name"
+                          firstVisibleHourOfDay="8" lastVisibleHourOfDay="19" navigationButtonsVisible="true"/>
+            </tab>
+            <tab id="tableTab" caption="msg://tableTab.caption" expand="lessonsTable">
+                <groupTable id="lessonsTable"
+                                    width="100%"
+                                    dataContainer="lessonsDc">
+                    <actions>
+                        <action id="create" type="create"/>
+                        <action id="edit" type="edit"/>
+                        <action id="remove" type="remove"/>
+                    </actions>
+                    <columns>
+                        <column id="name"/>
+                        <column id="startDate"/>
+                        <column id="duration"/>
+                        <column id="teacher"/>
+                        <column id="room"/>
+                        <column id="endDate"/>
+                    </columns>
+                    <rowsCount/>
+                    <buttonsPanel id="buttonsPanel"
+                                  alwaysVisible="true">
+                        <button id="createBtn" action="lessonsTable.create"/>
+                        <button id="editBtn" action="lessonsTable.edit"/>
+                        <button id="removeBtn" action="lessonsTable.remove"/>
+                    </buttonsPanel>
+                </groupTable>
+            </tab>
+        </tabSheet>
+        <hbox id="lookupActions" spacing="true" visible="false">
+            <button action="lookupSelectAction"/>
+            <button action="lookupCancelAction"/>
+        </hbox>
+    </layout>
+</window>
